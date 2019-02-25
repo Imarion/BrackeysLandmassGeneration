@@ -5,6 +5,8 @@ using UnityEngine;
 public class MapDisplay : MonoBehaviour
 {
     public Renderer textureRender;
+    public MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -19,9 +21,13 @@ public class MapDisplay : MonoBehaviour
     }
 
     public void DrawTexture(Texture2D texture) {
-
-
         textureRender.sharedMaterial.mainTexture = texture;
         textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height);
+    }
+
+    public void DrawMesh(MeshData meshData, Texture2D texture) {
+        // use ...shared...  to create the mesh in editor (outside of game mode)
+        meshFilter.sharedMesh = meshData.CreateMesh();
+        meshRenderer.sharedMaterial.mainTexture = texture;
     }
 }
