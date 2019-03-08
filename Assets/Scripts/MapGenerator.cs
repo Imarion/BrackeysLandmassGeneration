@@ -15,22 +15,28 @@ public class MapGenerator : MonoBehaviour
 
     public Material terrainMaterial;
 
+    [Range(0, MeshGenerator.numSupportedChunkSizes-1)]
+    public int chunkSizeIndex;
+
+    [Range(0, MeshGenerator.numSupportedFlatShadedChunkSizes - 1)]
+    public int flatShadedChunkSizeIndex;
+
     //public const int mapChunkSize = 95; // we add 2 for borderSize -> back to 241; 95 -> 96 which is divisible by all even numbers up to 12.
 
     public int mapChunkSize {
         get {
             if (terrainData.useFlatShading)
             {
-                return 95;
+                return MeshGenerator.supportedFlatShadedChunkSizes[flatShadedChunkSizeIndex] - 1;
             }
             else {
-                return 239;
+                return MeshGenerator.supportedChunkSizes[chunkSizeIndex] - 1;
             }
         }
-    }    
+    }
 
-    [Range(0, 6)]
-    public int editorPreviewLOD;   // 1, 2, 4, 8, 10, 12
+    [Range(0, MeshGenerator.numSupportedLODs - 1)]
+    public int editorPreviewLOD;   // 1, 2, 4, 8, 10, 12, ...
 
     public bool autoUpdate;
 
@@ -41,6 +47,8 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        textureData.ApplyToMaterial(terrainMaterial); // Onvalidate is not called when application is built
+        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
     }
 
     // Start is called before the first frame update
@@ -81,6 +89,7 @@ public class MapGenerator : MonoBehaviour
     }
 
     public void DrawMapInEditor() {
+        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
         MapData mapData = GenerateMapData(Vector2.zero);
 
         MapDisplay display = FindObjectOfType<MapDisplay>();
@@ -154,9 +163,7 @@ public class MapGenerator : MonoBehaviour
                 }
             }            
         }
-
-        textureData.UpdateMeshHeights(terrainMaterial, terrainData.minHeight, terrainData.maxHeight);
-
+      
         return new MapData(noiseMap);
     }
 
