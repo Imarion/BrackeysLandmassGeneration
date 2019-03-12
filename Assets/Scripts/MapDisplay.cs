@@ -29,6 +29,6 @@ public class MapDisplay : MonoBehaviour
         // use ...shared...  to create the mesh in editor (outside of game mode)
         meshFilter.sharedMesh = meshData.CreateMesh();
 
-        meshFilter.transform.localScale = Vector3.one * FindObjectOfType<MapGenerator>().terrainData.uniformScale;
+        meshFilter.transform.localScale = Vector3.one * FindObjectOfType<MapGenerator>().meshSettings.meshScale;
     }
 }
