@@ -41,7 +41,7 @@ public class ThreadedDataRequester : MonoBehaviour
         object data = generateData();
         lock (dataQueue)
         {
-            dataQueue.Enqueue(new ThreadInfo(callback, generateData));
+            dataQueue.Enqueue(new ThreadInfo(callback, data));
         }
     }
 
